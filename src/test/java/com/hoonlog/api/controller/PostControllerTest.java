@@ -7,12 +7,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
 class PostControllerTest {
@@ -23,7 +21,7 @@ class PostControllerTest {
     @Test
     @DisplayName("/posts 요청시 hello world 출력")
     public void get() throws Exception {
-        //given
+        //expected
         mockMvc.perform(MockMvcRequestBuilders.post("/posts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"title\":\"글제목\", \"content\":\"글내용\"}")
@@ -31,9 +29,5 @@ class PostControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("Hello World"))
                 .andDo(print());
-
-        //when
-
-        //then
     }
 }
