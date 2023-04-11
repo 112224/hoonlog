@@ -9,8 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest
 class PostControllerTest {
@@ -27,7 +26,19 @@ class PostControllerTest {
                         .content("{\"title\":\"글제목\", \"content\":\"글내용\"}")
                 )
                 .andExpect(status().isOk())
-                .andExpect(content().string("Hello World"))
+                .andExpect(content().string("{}"))
+                .andDo(print());
+    }
+    @Test
+    @DisplayName("/posts 요청시 Title 값은 필수")
+    public void valid() throws Exception {
+        //expected
+        mockMvc.perform(MockMvcRequestBuilders.post("/posts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":null, \"content\":\"글내용\"}")
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("제목을 입력해주세요."))
                 .andDo(print());
     }
 }
