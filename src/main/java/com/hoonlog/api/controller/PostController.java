@@ -17,18 +17,8 @@ import java.util.Map;
 public class PostController {
 
     @PostMapping("/posts")
-    public Map<String, String> post(@RequestBody @Valid PostDto params, BindingResult result) {
+    public Map<String, String> post(@RequestBody @Valid PostDto params) {
         log.info("params = {}" , params.toString());
-        if (result.hasErrors()) {
-            List<FieldError> fieldErrors = result.getFieldErrors();
-            FieldError firstFieldError = fieldErrors.get(0);
-            String fieldName = firstFieldError.getField();
-            String defaultMessage = firstFieldError.getDefaultMessage();
-
-            Map<String, String> error = new HashMap<>();
-            error.put(fieldName, defaultMessage);
-            return error;
-        }
 
         return Map.of();
     }
