@@ -19,9 +19,8 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/posts")
-    public Map<String, String> post(@RequestBody @Valid PostDto params) {
+    public void post(@RequestBody @Valid PostDto params) {
         log.info("params = {}" , params.toString());
         postService.save(params);
-        return Map.of();
     }
 }

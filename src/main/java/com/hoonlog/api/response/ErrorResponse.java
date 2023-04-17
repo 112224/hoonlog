@@ -1,5 +1,6 @@
 package com.hoonlog.api.response;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -16,7 +17,6 @@ import java.util.Map;
  * }
  */
 
-@RequiredArgsConstructor
 @Getter
 public class ErrorResponse {
 
@@ -26,5 +26,11 @@ public class ErrorResponse {
 
     public void addValidation(String fieldName, String errorMessage) {
         this.validation.put(fieldName, errorMessage);
+    }
+
+    @Builder
+    public ErrorResponse(String code, String message) {
+        this.code = code;
+        this.message = message;
     }
 }
