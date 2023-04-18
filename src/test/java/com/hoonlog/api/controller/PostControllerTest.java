@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hoonlog.api.domain.Post;
 import com.hoonlog.api.repository.PostRepository;
 import com.hoonlog.api.request.PostDto;
+import com.hoonlog.api.service.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -100,6 +101,27 @@ class PostControllerTest {
         Post post = postRepository.findAll().get(0);
         assertThat(post.getTitle()).isEqualTo("제목!");
         assertThat(post.getContent()).isEqualTo("글내용");
+    }
 
+    @Test
+    @DisplayName("단건 조회")
+    public void test4() throws Exception {
+        //given
+        Post post = Post.builder()
+                .title("foo")
+                .content("bar")
+                .build();
+
+        postRepository.save(post);
+
+        //expected
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts/{postId}", post.getId())
+                        .contentType(APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(post.getId()))
+                .andExpect(jsonPath("$.title").value(post.getTitle()))
+                .andExpect(jsonPath("$.content").value(post.getContent()))
+                .andDo(print());
     }
 }
