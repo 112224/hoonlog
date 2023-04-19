@@ -1,9 +1,9 @@
 package com.hoonlog.api.controller;
 
-import com.hoonlog.api.domain.Post;
 import com.hoonlog.api.request.PostRequest;
 import com.hoonlog.api.response.PostResponse;
 import com.hoonlog.api.service.PostService;
+import com.hoonlog.api.service.dto.PostDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +29,12 @@ public class PostController {
 
     @GetMapping("/posts/{postId}")
     public PostResponse get(@PathVariable Long postId) {
-        Post post = postService.get(postId);
+        PostDto postDto = postService.get(postId);
 
         return PostResponse.builder()
-                .id(post.getId())
-                .title(post.getTitle())
-                .content(post.getContent())
+                .id(postDto.getId())
+                .title(postDto.getTitle())
+                .content(postDto.getContent())
                 .build();
     }
 }

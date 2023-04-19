@@ -53,7 +53,7 @@ class PostControllerTest {
                         .content(json)
                 )
                 .andExpect(status().isOk())
-                .andExpect(content().string("{}"))
+                .andExpect(content().string(""))
                 .andDo(print());
     }
     @Test
@@ -120,6 +120,28 @@ class PostControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(post.getId()))
                 .andExpect(jsonPath("$.title").value(post.getTitle()))
+                .andExpect(jsonPath("$.content").value(post.getContent()))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("단건 조회")
+    public void test5() throws Exception {
+        //given
+        Post post = Post.builder()
+                .title("123456789012345")
+                .content("bar")
+                .build();
+
+        postRepository.save(post);
+
+        //expected
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts/{postId}", post.getId())
+                        .contentType(APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(post.getId()))
+                .andExpect(jsonPath("$.title").value("1234567890"))
                 .andExpect(jsonPath("$.content").value(post.getContent()))
                 .andDo(print());
     }
