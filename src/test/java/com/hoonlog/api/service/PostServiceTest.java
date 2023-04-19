@@ -2,7 +2,7 @@ package com.hoonlog.api.service;
 
 import com.hoonlog.api.domain.Post;
 import com.hoonlog.api.repository.PostRepository;
-import com.hoonlog.api.request.PostDto;
+import com.hoonlog.api.request.PostRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,13 +30,13 @@ class PostServiceTest {
     @DisplayName("Save post")
     public void test1() {
         //given
-        PostDto postDto = PostDto.builder()
+        PostRequest postRequest = PostRequest.builder()
                 .title("title!")
                 .content("this is content!!")
                 .build();
 
         //when
-        postService.save(postDto);
+        postService.save(postRequest);
 
         //then
         assertThat(postRepository.count()).isEqualTo(1L);

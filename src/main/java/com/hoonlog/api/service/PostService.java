@@ -2,7 +2,7 @@ package com.hoonlog.api.service;
 
 import com.hoonlog.api.domain.Post;
 import com.hoonlog.api.repository.PostRepository;
-import com.hoonlog.api.request.PostDto;
+import com.hoonlog.api.request.PostRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,11 +14,11 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    public void save(PostDto postDto) {
+    public void save(PostRequest postRequest) {
 
         Post post = Post.builder()
-                .title(postDto.getTitle())
-                .content(postDto.getContent())
+                .title(postRequest.getTitle())
+                .content(postRequest.getContent())
                 .build();
 
         postRepository.save(post);

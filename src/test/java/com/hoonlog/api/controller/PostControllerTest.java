@@ -3,8 +3,7 @@ package com.hoonlog.api.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hoonlog.api.domain.Post;
 import com.hoonlog.api.repository.PostRepository;
-import com.hoonlog.api.request.PostDto;
-import com.hoonlog.api.service.PostService;
+import com.hoonlog.api.request.PostRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,7 +38,7 @@ class PostControllerTest {
     public void get() throws Exception {
 
         //given
-        PostDto req = PostDto.builder()
+        PostRequest req = PostRequest.builder()
                 .title("제목입니다.")
                 .content("내용!")
                 .build();
@@ -61,11 +60,11 @@ class PostControllerTest {
     @DisplayName("/posts 요청시 Title 값은 필수")
     public void valid() throws Exception {
         //given
-        PostDto postDto = PostDto.builder()
+        PostRequest postRequest = PostRequest.builder()
                 .content("글내용")
                 .build();
         ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(postDto);
+        String json = objectMapper.writeValueAsString(postRequest);
         //expected
         mockMvc.perform(MockMvcRequestBuilders.post("/posts")
                         .contentType(APPLICATION_JSON)
@@ -81,12 +80,12 @@ class PostControllerTest {
     @DisplayName("/posts 요청 시 DB에 값이 저장")
     public void saveTest() throws Exception {
         //given
-        PostDto postDto = PostDto.builder()
+        PostRequest postRequest = PostRequest.builder()
                 .title("제목!")
                 .content("글내용")
                 .build();
         ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(postDto);
+        String json = objectMapper.writeValueAsString(postRequest);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/posts")
                         .contentType(APPLICATION_JSON)

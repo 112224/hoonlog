@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @Getter
 @NoArgsConstructor
-public class PostDto {
+public class PostRequest {
 
     @NotBlank(message = "제목을 입력해주세요.")
     public String title;
@@ -16,7 +16,7 @@ public class PostDto {
     public String content;
 
     @Builder
-    public PostDto(String title, String content) {
+    public PostRequest(String title, String content) {
         this.title = title;
         this.content = content;
     }

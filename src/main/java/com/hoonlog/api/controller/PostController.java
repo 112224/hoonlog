@@ -1,15 +1,13 @@
 package com.hoonlog.api.controller;
 
 import com.hoonlog.api.domain.Post;
-import com.hoonlog.api.repository.PostRepository;
-import com.hoonlog.api.request.PostDto;
+import com.hoonlog.api.request.PostRequest;
+import com.hoonlog.api.response.PostResponse;
 import com.hoonlog.api.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -19,7 +17,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/posts")
-    public void post(@RequestBody @Valid PostDto params) {
+    public void post(@RequestBody @Valid PostRequest params) {
         log.info("params = {}" , params.toString());
         postService.save(params);
     }
@@ -30,7 +28,13 @@ public class PostController {
      */
 
     @GetMapping("/posts/{postId}")
-    public Post get(@PathVariable Long postId) {
-        return postService.get(postId);
+    public PostResponse get(@PathVariable Long postId) {
+        Post post = postService.get(postId);
+
+        return PostResponse.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .build();
     }
 }
