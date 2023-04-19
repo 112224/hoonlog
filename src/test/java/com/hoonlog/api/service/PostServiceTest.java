@@ -3,6 +3,7 @@ package com.hoonlog.api.service;
 import com.hoonlog.api.domain.Post;
 import com.hoonlog.api.repository.PostRepository;
 import com.hoonlog.api.request.PostRequest;
+import com.hoonlog.api.service.dto.PostDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -58,7 +59,7 @@ class PostServiceTest {
         postRepository.save(reqPost);
 
         //then
-        Post post = postService.get(reqPost.getId());
+        PostDto post = postService.get(reqPost.getId());
         assertThat(post).isNotNull();
         assertThat(post.getContent()).isEqualTo("content");
         assertThat(post.getTitle()).isEqualTo("title");
