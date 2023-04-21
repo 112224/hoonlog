@@ -73,9 +73,8 @@ class PostServiceTest {
         //given
         Long postId = 1L;
         //when
-//        Post post = postService.get(postId);
 
-        //then
+        //expected
         assertThrows(IllegalArgumentException.class,
                 () -> postService.get(postId)
         );
@@ -98,7 +97,7 @@ class PostServiceTest {
         postRepository.save(reqPost1);
 
         //when
-        List<Post> list = postService.getList();
+        List<PostDto> list = postService.getList();
 
         //then
         assertThat(list).isNotNull();

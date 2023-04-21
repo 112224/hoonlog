@@ -145,4 +145,35 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.content").value(post.getContent()))
                 .andDo(print());
     }
+
+    @Test
+    @DisplayName("다건 조회")
+    public void test6() throws Exception {
+        //given
+        Post post1 = Post.builder()
+                .title("123456789012345")
+                .content("bar")
+                .build();
+        postRepository.save(post1);
+
+        Post post2 = Post.builder()
+                .title("1234567890")
+                .content("bar1234")
+                .build();
+        postRepository.save(post2);
+
+        //expected
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts")
+                        .contentType(APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].id").value(post1.getId()))
+                .andExpect(jsonPath("$[0].title").value("1234567890"))
+                .andExpect(jsonPath("$[0].content").value("bar"))
+                .andExpect(jsonPath("$[1].id").value(post2.getId()))
+                .andExpect(jsonPath("$[1].title").value("1234567890"))
+                .andExpect(jsonPath("$[1].content").value("bar1234"))
+                .andDo(print());
+    }
 }

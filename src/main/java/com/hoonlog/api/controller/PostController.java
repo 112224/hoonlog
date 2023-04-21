@@ -11,6 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @RestController
@@ -42,7 +45,14 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public List<Post> getList() {
-        return postService.getList();
+    public List<PostResponse> getList() {
+        List<PostDto> results = postService.getList();
+        return results.stream()
+                .map(postDto -> PostResponse.builder()
+                        .id(postDto.getId())
+                        .title(postDto.getTitle())
+                        .content(postDto.getContent())
+                        .build())
+                .collect(toList());
     }
 }
