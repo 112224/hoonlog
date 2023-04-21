@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -34,5 +36,9 @@ public class PostService {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .build();
+    }
+
+    public List<Post> getList() {
+        return postRepository.findAll();
     }
 }

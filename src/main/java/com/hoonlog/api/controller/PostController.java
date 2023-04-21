@@ -1,5 +1,6 @@
 package com.hoonlog.api.controller;
 
+import com.hoonlog.api.domain.Post;
 import com.hoonlog.api.request.PostRequest;
 import com.hoonlog.api.response.PostResponse;
 import com.hoonlog.api.service.PostService;
@@ -8,6 +9,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -36,5 +39,10 @@ public class PostController {
                 .title(postDto.getTitle())
                 .content(postDto.getContent())
                 .build();
+    }
+
+    @GetMapping("/posts")
+    public List<Post> getList() {
+        return postService.getList();
     }
 }

@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -77,5 +79,29 @@ class PostServiceTest {
         assertThrows(IllegalArgumentException.class,
                 () -> postService.get(postId)
         );
+    }
+
+    @Test
+    @DisplayName("다건조회 테스트")
+    public void getPostListTest() throws Exception {
+        //given
+        Post reqPost = Post.builder()
+                .title("foo1")
+                .content("bar1")
+                .build();
+        postRepository.save(reqPost);
+
+        Post reqPost1 = Post.builder()
+                .title("title1")
+                .content("content1")
+                .build();
+        postRepository.save(reqPost1);
+
+        //when
+        List<Post> list = postService.getList();
+
+        //then
+        assertThat(list).isNotNull();
+        assertThat(list.size()).isEqualTo(2);
     }
 }
