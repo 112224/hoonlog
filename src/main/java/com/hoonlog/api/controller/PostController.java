@@ -48,11 +48,7 @@ public class PostController {
     public List<PostResponse> getList() {
         List<PostDto> results = postService.getList();
         return results.stream()
-                .map(postDto -> PostResponse.builder()
-                        .id(postDto.getId())
-                        .title(postDto.getTitle())
-                        .content(postDto.getContent())
-                        .build())
+                .map(PostResponse::new)
                 .collect(toList());
     }
 }

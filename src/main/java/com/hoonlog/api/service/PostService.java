@@ -43,11 +43,7 @@ public class PostService {
 
     public List<PostDto> getList() {
         return postRepository.findAll().stream()
-                .map(post -> PostDto.builder()
-                        .id(post.getId())
-                        .title(post.getTitle())
-                        .content(post.getContent())
-                        .build())
+                .map(PostDto::new)
                 .collect(toList());
     }
 }
