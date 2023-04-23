@@ -12,6 +12,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -175,5 +179,30 @@ class PostControllerTest {
                 .andExpect(jsonPath("$[1].title").value("1234567890"))
                 .andExpect(jsonPath("$[1].content").value("bar1234"))
                 .andDo(print());
+    }
+
+    @Test
+    public void test7() throws Exception {
+        //given
+        List<Post> requestPosts = IntStream.range(0, 30)
+                .mapToObj(i -> Post.builder()
+                        .title("Title " + i)
+                        .content("Content " + i)
+                        .build()
+                ).toList();
+
+        postRepository.saveAll(requestPosts);
+        //when
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts?page=1&size=5&sort=id,desc")
+                        .contentType(APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(5))
+                .andExpect(jsonPath("$[0].id").value(25))
+                .andExpect(jsonPath("$[0].title").value("Title 24"))
+                .andExpect(jsonPath("$[0].content").value("Content 24"))
+                .andDo(print());
+
+        //then
     }
 }

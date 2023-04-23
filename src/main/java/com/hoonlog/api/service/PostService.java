@@ -6,6 +6,9 @@ import com.hoonlog.api.request.PostRequest;
 import com.hoonlog.api.service.dto.PostDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,8 +44,8 @@ public class PostService {
                 .build();
     }
 
-    public List<PostDto> getList() {
-        return postRepository.findAll().stream()
+    public List<PostDto> getList(Pageable pageable) {
+        return postRepository.findAll(pageable).stream()
                 .map(PostDto::new)
                 .collect(toList());
     }

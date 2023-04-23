@@ -9,8 +9,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -81,26 +86,27 @@ class PostServiceTest {
     }
 
     @Test
-    @DisplayName("다건조회 테스트")
+    @DisplayName("다건조회 테스트 - 페이징")
     public void getPostListTest() throws Exception {
         //given
-        Post reqPost = Post.builder()
-                .title("foo1")
-                .content("bar1")
-                .build();
-        postRepository.save(reqPost);
+        List<Post> requestPosts = IntStream.range(0, 30)
+                .mapToObj(i -> Post.builder()
+                            .title("Title " + i)
+                            .content("Content " + i)
+                            .build()
+                ).toList();
 
-        Post reqPost1 = Post.builder()
-                .title("title1")
-                .content("content1")
-                .build();
-        postRepository.save(reqPost1);
+        postRepository.saveAll(requestPosts);
 
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
         //when
-        List<PostDto> list = postService.getList();
+        List<PostDto> list = postService.getList(pageable);
 
         //then
         assertThat(list).isNotNull();
-        assertThat(list.size()).isEqualTo(2);
+        assertThat(list.size()).isEqualTo(5);
+        assertThat(list.get(0).getTitle()).isEqualTo("Title 0");
+        assertThat(list.get(4).getTitle()).isEqualTo("Title 4");
+
     }
 }
