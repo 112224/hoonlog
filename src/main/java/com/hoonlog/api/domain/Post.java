@@ -32,8 +32,21 @@ public class Post {
         this.content = content;
     }
 
+    // 내 방식
     public void changePost(PostEdit postEdit) {
         this.title = postEdit.getTitle();
         this.content = postEdit.getContent();
+    }
+
+    //참고 PostEditor 를 이용한 방식
+    public PostEditor.PostEditorBuilder toEditor() {
+        return PostEditor.builder()
+                .title(title)
+                .content(content);
+    }
+
+    public void edit(PostEditor postEditor) {
+        this.title = postEditor.getTitle();
+        this.content = postEditor.getContent();
     }
 }
