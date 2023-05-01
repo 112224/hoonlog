@@ -4,9 +4,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 @Getter
 @Setter
 public class PostSearch {
+
+    public static final int MAX_SIZE = 30;
 
     private int page;
     private int size;
@@ -18,13 +23,13 @@ public class PostSearch {
     }
 
     private int validatePageValue(Integer page) {
-        if (page == null || page < 1 ) {
+        if (page == null) {
             return 1;
         }
-        return page;
+        return max(page, 1);
     }
 
     public long getOffset() {
-        return (long) (getPage() - 1) * getSize();
+        return (long) (page - 1) * min(size, MAX_SIZE);
     }
 }
