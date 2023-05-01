@@ -1,5 +1,6 @@
 package com.hoonlog.api.domain;
 
+import com.hoonlog.api.request.PostEdit;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -29,5 +30,10 @@ public class Post {
     public Post(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public void changePost(PostEdit postEdit) {
+        this.title = postEdit.getTitle();
+        this.content = postEdit.getContent();
     }
 }
