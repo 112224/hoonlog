@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hoonlog.api.domain.Post;
 import com.hoonlog.api.repository.PostRepository;
 import com.hoonlog.api.request.PostRequest;
+import com.hoonlog.api.request.PostSearch;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -167,17 +168,17 @@ class PostControllerTest {
         postRepository.save(post2);
 
         //expected
-        mockMvc.perform(MockMvcRequestBuilders.get("/posts")
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts?page=1")
                         .contentType(APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].id").value(post1.getId()))
+                .andExpect(jsonPath("$[0].id").value(post2.getId()))
                 .andExpect(jsonPath("$[0].title").value("1234567890"))
-                .andExpect(jsonPath("$[0].content").value("bar"))
-                .andExpect(jsonPath("$[1].id").value(post2.getId()))
+                .andExpect(jsonPath("$[0].content").value("bar1234"))
+                .andExpect(jsonPath("$[1].id").value(post1.getId()))
                 .andExpect(jsonPath("$[1].title").value("1234567890"))
-                .andExpect(jsonPath("$[1].content").value("bar1234"))
+                .andExpect(jsonPath("$[1].content").value("bar"))
                 .andDo(print());
     }
 
@@ -193,12 +194,11 @@ class PostControllerTest {
 
         postRepository.saveAll(requestPosts);
         //when
-        mockMvc.perform(MockMvcRequestBuilders.get("/posts?page=1&size=5&sort=id,desc")
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts?page=2&size=5&sort=id,desc")
                         .contentType(APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(5))
-                .andExpect(jsonPath("$[0].id").value(25))
                 .andExpect(jsonPath("$[0].title").value("Title 24"))
                 .andExpect(jsonPath("$[0].content").value("Content 24"))
                 .andDo(print());

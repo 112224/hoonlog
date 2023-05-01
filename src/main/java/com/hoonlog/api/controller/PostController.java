@@ -2,6 +2,7 @@ package com.hoonlog.api.controller;
 
 import com.hoonlog.api.domain.Post;
 import com.hoonlog.api.request.PostRequest;
+import com.hoonlog.api.request.PostSearch;
 import com.hoonlog.api.response.PostResponse;
 import com.hoonlog.api.service.PostService;
 import com.hoonlog.api.service.dto.PostDto;
@@ -48,8 +49,8 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public List<PostResponse> getList(Pageable pageable) {
-        List<PostDto> results = postService.getList(pageable);
+    public List<PostResponse> getList(PostSearch postSearch) {
+        List<PostDto> results = postService.getList(postSearch);
         return results.stream()
                 .map(PostResponse::new)
                 .collect(toList());

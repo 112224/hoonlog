@@ -1,6 +1,7 @@
 package com.hoonlog.api.repository;
 
 import com.hoonlog.api.domain.Post;
+import com.hoonlog.api.request.PostSearch;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -15,11 +16,11 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
 
 
     @Override
-    public List<Post> getList(int page) {
+    public List<Post> getList(PostSearch postSearch) {
         return jpaQueryFactory
                 .selectFrom(post)
-                .limit(10)
-                .offset((page - 1) * 10L)
+                .limit(postSearch.getSize())
+                .offset(postSearch.getOffset())
                 .orderBy(post.id.desc())
                 .fetch();
     }

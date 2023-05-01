@@ -3,6 +3,7 @@ package com.hoonlog.api.service;
 import com.hoonlog.api.domain.Post;
 import com.hoonlog.api.repository.PostRepository;
 import com.hoonlog.api.request.PostRequest;
+import com.hoonlog.api.request.PostSearch;
 import com.hoonlog.api.service.dto.PostDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,8 +45,8 @@ public class PostService {
                 .build();
     }
 
-    public List<PostDto> getList(Pageable pageable) {
-        return postRepository.findAll(pageable).stream()
+    public List<PostDto> getList(PostSearch postSearch) {
+        return postRepository.getList(postSearch).stream()
                 .map(PostDto::new)
                 .collect(toList());
     }

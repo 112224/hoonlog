@@ -3,6 +3,7 @@ package com.hoonlog.api.service;
 import com.hoonlog.api.domain.Post;
 import com.hoonlog.api.repository.PostRepository;
 import com.hoonlog.api.request.PostRequest;
+import com.hoonlog.api.request.PostSearch;
 import com.hoonlog.api.service.dto.PostDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -85,28 +86,55 @@ class PostServiceTest {
         );
     }
 
+//    @Test
+//    @DisplayName("다건조회 테스트 - 페이징")
+//    public void getPostListTest() throws Exception {
+//        //given
+//        List<Post> requestPosts = IntStream.range(0, 30)
+//                .mapToObj(i -> Post.builder()
+//                            .title("Title " + i)
+//                            .content("Content " + i)
+//                            .build()
+//                ).toList();
+//
+//        postRepository.saveAll(requestPosts);
+//
+//        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
+//        //when
+//        List<PostDto> list = postService.getList(postSearch);
+//
+//        //then
+//        assertThat(list).isNotNull();
+//        assertThat(list.size()).isEqualTo(5);
+//        assertThat(list.get(0).getTitle()).isEqualTo("Title 0");
+//        assertThat(list.get(4).getTitle()).isEqualTo("Title 4");
+//
+//    }
+
     @Test
-    @DisplayName("다건조회 테스트 - 페이징")
-    public void getPostListTest() throws Exception {
+    @DisplayName("다건조회 테스트 - querydsl")
+    public void getQdlPostListTest() throws Exception {
         //given
         List<Post> requestPosts = IntStream.range(0, 30)
                 .mapToObj(i -> Post.builder()
-                            .title("Title " + i)
-                            .content("Content " + i)
-                            .build()
+                        .title("Title " + i)
+                        .content("Content " + i)
+                        .build()
                 ).toList();
 
         postRepository.saveAll(requestPosts);
 
-        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "id");
+        PostSearch postSearch = PostSearch.builder()
+                .page(1)
+                .build();
         //when
-        List<PostDto> list = postService.getList(pageable);
+        List<PostDto> list = postService.getList(postSearch);
 
         //then
         assertThat(list).isNotNull();
-        assertThat(list.size()).isEqualTo(5);
-        assertThat(list.get(0).getTitle()).isEqualTo("Title 0");
-        assertThat(list.get(4).getTitle()).isEqualTo("Title 4");
+        assertThat(list.size()).isEqualTo(10);
+        assertThat(list.get(0).getTitle()).isEqualTo("Title 29");
+        assertThat(list.get(4).getTitle()).isEqualTo("Title 25");
 
     }
 }
