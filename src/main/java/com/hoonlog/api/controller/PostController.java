@@ -1,6 +1,6 @@
 package com.hoonlog.api.controller;
 
-import com.hoonlog.api.domain.Post;
+import com.hoonlog.api.request.PostEdit;
 import com.hoonlog.api.request.PostRequest;
 import com.hoonlog.api.request.PostSearch;
 import com.hoonlog.api.response.PostResponse;
@@ -9,13 +9,9 @@ import com.hoonlog.api.service.dto.PostDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -28,7 +24,7 @@ public class PostController {
 
     @PostMapping("/posts")
     public void post(@RequestBody @Valid PostRequest params) {
-        log.info("params = {}" , params.toString());
+        log.info("params = {}", params.toString());
         postService.save(params);
     }
 
@@ -54,5 +50,13 @@ public class PostController {
         return results.stream()
                 .map(PostResponse::new)
                 .collect(toList());
+    }
+
+    /**
+     *
+     */
+    @PatchMapping("/posts/{postId}")
+    public void edit(@PathVariable Long postId, @RequestBody @Valid PostEdit postEdit) {
+        postService.edit(postId, postEdit);
     }
 }
