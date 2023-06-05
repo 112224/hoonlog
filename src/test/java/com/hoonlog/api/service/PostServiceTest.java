@@ -2,6 +2,7 @@ package com.hoonlog.api.service;
 
 import com.hoonlog.api.domain.Post;
 import com.hoonlog.api.repository.PostRepository;
+import com.hoonlog.api.request.PostEdit;
 import com.hoonlog.api.request.PostRequest;
 import com.hoonlog.api.request.PostSearch;
 import com.hoonlog.api.service.dto.PostDto;
@@ -10,16 +11,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class PostServiceTest {
@@ -136,5 +133,57 @@ class PostServiceTest {
         assertThat(list.get(0).getTitle()).isEqualTo("Title 29");
         assertThat(list.get(4).getTitle()).isEqualTo("Title 25");
 
+    }
+
+    @Test
+    @DisplayName("게시글 제목 수정")
+    public void updatePostTitle() throws Exception {
+        //given
+        PostRequest postRequest = PostRequest.builder()
+                .title("hoon!!")
+                .content("Spring So Convenience!!")
+                .build();
+
+        //when
+        Long savedId = postService.save(postRequest);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("Hoon!")
+                .content("Update the Post!")
+                .build();
+        postService.edit(savedId, postEdit);
+
+        Post post = postRepository.findById(savedId)
+                .orElseThrow(() -> new IllegalArgumentException("글이 존재하지 않습니다. postId =" + savedId));
+
+        //then
+        assertThat(post.getTitle()).isEqualTo("Hoon!");
+        assertThat(post.getContent()).isEqualTo("Update the Post!");
+    }
+
+    @Test
+    @DisplayName("게시글 제목 수정_빌더 이용")
+    public void updatePostTitle2() throws Exception {
+        //given
+        PostRequest postRequest = PostRequest.builder()
+                .title("hoon!!")
+                .content("Spring So Convenience!!")
+                .build();
+
+        //when
+        Long savedId = postService.save(postRequest);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("Hoon!")
+                .content("Update the Post!")
+                .build();
+        postService.editUsingBuilder(savedId, postEdit);
+
+        Post post = postRepository.findById(savedId)
+                .orElseThrow(() -> new IllegalArgumentException("글이 존재하지 않습니다. postId =" + savedId));
+
+        //then
+        assertThat(post.getTitle()).isEqualTo("Hoon!");
+        assertThat(post.getContent()).isEqualTo("Update the Post!");
     }
 }

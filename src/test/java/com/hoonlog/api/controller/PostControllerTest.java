@@ -3,8 +3,8 @@ package com.hoonlog.api.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hoonlog.api.domain.Post;
 import com.hoonlog.api.repository.PostRepository;
+import com.hoonlog.api.request.PostEdit;
 import com.hoonlog.api.request.PostRequest;
-import com.hoonlog.api.request.PostSearch;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,13 +13,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -32,6 +32,9 @@ class PostControllerTest {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @BeforeEach
     public void clean() {
@@ -53,7 +56,7 @@ class PostControllerTest {
         String json = objectMapper.writeValueAsString(req);
 
         //expected
-        mockMvc.perform(MockMvcRequestBuilders.post("/posts")
+        mockMvc.perform(post("/posts")
                         .contentType(APPLICATION_JSON)
                         .content(json)
                 )
@@ -71,7 +74,7 @@ class PostControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(postRequest);
         //expected
-        mockMvc.perform(MockMvcRequestBuilders.post("/posts")
+        mockMvc.perform(post("/posts")
                         .contentType(APPLICATION_JSON)
                         .content(json)
                 )
@@ -92,7 +95,7 @@ class PostControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(postRequest);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/posts")
+        mockMvc.perform(post("/posts")
                         .contentType(APPLICATION_JSON)
                         .content(json)
                 )
@@ -193,7 +196,7 @@ class PostControllerTest {
                 ).toList();
 
         postRepository.saveAll(requestPosts);
-        //when
+        //expected
         mockMvc.perform(MockMvcRequestBuilders.get("/posts?page=2&size=5&sort=id,desc")
                         .contentType(APPLICATION_JSON)
                 )
@@ -202,7 +205,28 @@ class PostControllerTest {
                 .andExpect(jsonPath("$[0].title").value("Title 24"))
                 .andExpect(jsonPath("$[0].content").value("Content 24"))
                 .andDo(print());
+    }
 
-        //then
+    @Test
+    public void updateTest() throws Exception{
+        //given
+        Post post = Post.builder()
+                .title("hoon!!")
+                .content("Spring So Convenience!!")
+                .build();
+
+        postRepository.save(post);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("Hoon!")
+                .content("Update the Post!")
+                .build();
+
+        mockMvc.perform(patch("/posts/{postId}", post.getId())
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(postEdit))
+                )
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 }
