@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.xml.validation.Validator;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -185,5 +186,22 @@ class PostServiceTest {
         //then
         assertThat(post.getTitle()).isEqualTo("Hoon!");
         assertThat(post.getContent()).isEqualTo("Update the Post!");
+    }
+
+    @Test
+    @DisplayName("게시글 삭제")
+    public void deletePost() throws Exception {
+        //given
+        PostRequest postRequest = PostRequest.builder()
+                .title("hoon!!")
+                .content("Spring So Convenience!!")
+                .build();
+
+        Long savedId = postService.save(postRequest);
+
+        //when
+        postService.delete(savedId);
+        //then
+        assertThat(postRepository.count()).isEqualTo(0);
     }
 }

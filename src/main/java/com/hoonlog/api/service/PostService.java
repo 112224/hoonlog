@@ -7,6 +7,7 @@ import com.hoonlog.api.request.PostEdit;
 import com.hoonlog.api.request.PostRequest;
 import com.hoonlog.api.request.PostSearch;
 import com.hoonlog.api.service.dto.PostDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    public Long save(PostRequest postRequest) {
+    public Long save(@Valid PostRequest postRequest) {
 
         Post post = Post.builder()
                 .title(postRequest.getTitle())
@@ -84,4 +85,11 @@ public class PostService {
 
         post.edit(postEditor);
     }
+
+    public void delete(Long savedId) {
+        Post post = postRepository.findById(savedId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+
+        postRepository.delete(post);
+    }
+
 }
