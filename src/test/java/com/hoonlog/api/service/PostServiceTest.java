@@ -75,13 +75,19 @@ class PostServiceTest {
     @DisplayName("단건 조회 테스트 -> 에러")
     public void singleTest2() throws Exception {
         //given
-        Long postId = 1L;
-        //when
+        Post post = Post.builder()
+                .title("title")
+                .content("content")
+                .build();
 
-        //expected
-        assertThrows(IllegalArgumentException.class,
-                () -> postService.get(postId)
+        //when
+        postRepository.save(post);
+
+        //then
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> postService.get(post.getId() + 1L)
         );
+        assertThat(e.getMessage()).isEqualTo("존재하지 않는 글입니다.");
     }
 
 //    @Test
