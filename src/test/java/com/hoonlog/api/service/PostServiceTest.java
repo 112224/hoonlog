@@ -1,6 +1,7 @@
 package com.hoonlog.api.service;
 
 import com.hoonlog.api.domain.Post;
+import com.hoonlog.api.exception.PostNotFoundException;
 import com.hoonlog.api.repository.PostRepository;
 import com.hoonlog.api.request.PostEdit;
 import com.hoonlog.api.request.PostRequest;
@@ -83,11 +84,10 @@ class PostServiceTest {
         //when
         postRepository.save(post);
 
-        //then
-        IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-                () -> postService.get(post.getId() + 1L)
-        );
-        assertThat(e.getMessage()).isEqualTo("존재하지 않는 글입니다.");
+        //expected
+        assertThrows(PostNotFoundException.class, () -> {
+            postService.get(post.getId() + 1L);
+        });
     }
 
 //    @Test
@@ -169,6 +169,29 @@ class PostServiceTest {
     }
 
     @Test
+    public void 게시글_수정_존재하지않음() throws Exception {
+        //given
+        PostRequest postRequest = PostRequest.builder()
+                .title("hoon!!")
+                .content("Spring So Convenience!!")
+                .build();
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("Hoon!")
+                .content("Update the Post!")
+                .build();
+
+        Long savedId = postService.save(postRequest);
+
+        //expected
+        assertThrows(PostNotFoundException.class, () -> {
+            postService.edit(savedId + 1L, postEdit);
+        });
+
+
+    }
+
+    @Test
     @DisplayName("게시글 제목 수정_빌더 이용")
     public void updatePostTitle2() throws Exception {
         //given
@@ -209,5 +232,22 @@ class PostServiceTest {
         postService.delete(savedId);
         //then
         assertThat(postRepository.count()).isEqualTo(0);
+    }
+
+    @Test
+    public void 게시글_삭제_실패() throws Exception {
+        //given
+        PostRequest postRequest = PostRequest.builder()
+                .title("hoon!!")
+                .content("Spring So Convenience!!")
+                .build();
+
+        Long savedId = postService.save(postRequest);
+
+        //expected
+        assertThrows(PostNotFoundException.class, () -> {
+            postService.delete(savedId + 1L);
+        });
+
     }
 }

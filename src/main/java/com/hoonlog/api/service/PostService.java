@@ -2,6 +2,7 @@ package com.hoonlog.api.service;
 
 import com.hoonlog.api.domain.Post;
 import com.hoonlog.api.domain.PostEditor;
+import com.hoonlog.api.exception.PostNotFoundException;
 import com.hoonlog.api.repository.PostRepository;
 import com.hoonlog.api.request.PostEdit;
 import com.hoonlog.api.request.PostRequest;
@@ -37,7 +38,7 @@ public class PostService {
 
     public PostDto get(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+                .orElseThrow(PostNotFoundException::new);
 
         return PostDto.builder()
                 .id(post.getId())
@@ -55,7 +56,7 @@ public class PostService {
     @Transactional
     public void edit(Long id, PostEdit postEdit) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+                .orElseThrow(PostNotFoundException::new);
 
         post.changePost(postEdit);
     }
@@ -63,7 +64,7 @@ public class PostService {
     @Transactional
     public void editUsingBuilder(Long id, PostEdit postEdit) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+                .orElseThrow(PostNotFoundException::new);
 
         PostEditor.PostEditorBuilder editorBuilder = post.toEditor();
 
@@ -87,7 +88,7 @@ public class PostService {
     }
 
     public void delete(Long savedId) {
-        Post post = postRepository.findById(savedId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+        Post post = postRepository.findById(savedId).orElseThrow(PostNotFoundException::new);
 
         postRepository.delete(post);
     }
