@@ -241,13 +241,37 @@ class PostControllerTest {
 
         postRepository.save(post);
 
-        //when
+        //expected
         mockMvc.perform(delete("/posts/{postId}", post.getId())
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk()
                 ).andDo(print());
 
 
-        //then
+    }
+
+    @Test
+    public void 존재하지_않는_게시글_조회() throws Exception {
+        //expected
+        mockMvc.perform(delete("/posts/{postId}", 1L)
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
+    @Test
+    public void 존재하지_않는_게시글_수정() throws Exception {
+        // given
+        PostEdit postEdit = PostEdit.builder()
+                .title("Hoon!")
+                .content("Update the Post!")
+                .build();
+        //expected
+        mockMvc.perform(patch("/posts/{postId}", 1L)
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(postEdit))
+                )
+                .andExpect(status().isNotFound())
+                .andDo(print());
     }
 }

@@ -1,5 +1,6 @@
 package com.hoonlog.api.controller;
 
+import com.hoonlog.api.exception.PostNotFoundException;
 import com.hoonlog.api.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -31,5 +32,17 @@ public class ExceptionController {
         return errorResponse;
 
 
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(PostNotFoundException.class)
+    public ErrorResponse postNotFound(PostNotFoundException e) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .code("404")
+                .message(e.getMessage())
+                .build();
+
+        return errorResponse;
     }
 }

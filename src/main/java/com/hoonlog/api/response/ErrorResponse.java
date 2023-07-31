@@ -1,5 +1,6 @@
 package com.hoonlog.api.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,8 @@ import java.util.Map;
  */
 
 @Getter
+// 팀 내 규약에 따름
+//@JsonInclude(value = JsonInclude.Include.NON_EMPTY)
 public class ErrorResponse {
 
     private final String code;
