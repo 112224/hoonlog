@@ -1,5 +1,6 @@
 package com.hoonlog.api.controller;
 
+import com.hoonlog.api.exception.InvalidRequestException;
 import com.hoonlog.api.request.PostEdit;
 import com.hoonlog.api.request.PostRequest;
 import com.hoonlog.api.request.PostSearch;
@@ -23,9 +24,10 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/posts")
-    public void post(@RequestBody @Valid PostRequest params) {
-        log.info("params = {}", params.toString());
-        postService.save(params);
+    public void post(@RequestBody @Valid PostRequest request) {
+        request.validate();
+        log.info("params = {}", request.toString());
+        postService.save(request);
     }
 
     /**

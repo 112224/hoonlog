@@ -1,5 +1,6 @@
 package com.hoonlog.api.request;
 
+import com.hoonlog.api.exception.InvalidRequestException;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -19,5 +20,11 @@ public class PostRequest {
     public PostRequest(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public void validate() {
+        if (title.contains("바보")) {
+            throw new InvalidRequestException("title", "제목에 바보를 포함할 수 없습니다.");
+        }
     }
 }

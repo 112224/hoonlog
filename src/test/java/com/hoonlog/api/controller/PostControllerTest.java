@@ -111,6 +111,25 @@ class PostControllerTest {
     }
 
     @Test
+    public void 부적절한_제목() throws Exception {
+        //given
+        PostRequest postRequest = PostRequest.builder()
+                .title("제목은 바보!")
+                .content("글내용")
+                .build();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(postRequest);
+
+        //expected
+        mockMvc.perform(post("/posts")
+                        .contentType(APPLICATION_JSON)
+                        .content(json)
+                )
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @Test
     @DisplayName("단건 조회")
     public void test4() throws Exception {
         //given
