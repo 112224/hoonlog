@@ -1,0 +1,4 @@
+== PostControllerTest
+
+=== 글 단건 조회
+operation::index/[snippets="curl-request,http-request,http-response"]
