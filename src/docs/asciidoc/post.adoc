@@ -1,7 +1,7 @@
 == PostControllerTest
 
 === 글 단건 조회
-operation::index/[snippets="curl-request,path-parameters,http-request,response-fields,http-response"]
+operation::post-inquiry/[snippets="curl-request,path-parameters,http-request,response-fields,http-response"]
 
 === 글 등록
-operation::posts/[snippets="curl-request,request-fields,http-request,http-response"]
+operation::post-create/[snippets="curl-request,request-fields,http-request,http-response"]

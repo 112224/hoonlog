@@ -51,7 +51,7 @@ public class PostControllerDocTest {
                         .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("index", pathParameters(
+                .andDo(document("post-inquiry", pathParameters(
                         parameterWithName("postId").description("게시글 ID")
                         ),
                         responseFields(
@@ -78,7 +78,7 @@ public class PostControllerDocTest {
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("posts",
+                .andDo(document("post-create",
                         requestFields(
                             fieldWithPath("title").description("제목"),
                             fieldWithPath("content").description("내용")
