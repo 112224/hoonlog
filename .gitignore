@@ -39,3 +39,7 @@ out/
 
 ### Node Env ###
 nodeenv-16
+
+### node_modules
+!**/node_modules/
+/node_modules/
