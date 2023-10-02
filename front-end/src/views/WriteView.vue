@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {ref} from "vue";
 import axios from "axios";
+import router from "@/router";
 
 
 const count = ref(0);
@@ -11,11 +12,13 @@ const content = ref("");
 const write = function () {
     console.log(title.value +"  " + content.value);
     axios.post("/api/posts"
-        ,{
-            "title":title.value,
-            "content":content.value
+        , {
+            "title": title.value,
+            "content": content.value
         }
-    );
+    ).then(() => {
+        router.replace({name: "home"});
+    });
 }
 
 </script>
