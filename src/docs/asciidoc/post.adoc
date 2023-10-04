@@ -5,3 +5,6 @@ operation::post-inquiry/[snippets="curl-request,path-parameters,http-request,res
 
 === 글 등록
 operation::post-create/[snippets="curl-request,request-fields,http-request,http-response"]
+
+=== 글 수정
+operation::post-edit/[snippets="curl-request,request-fields,http-request,http-response"]

@@ -11,14 +11,12 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.restdocs.payload.PayloadDocumentation;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -45,9 +43,9 @@ public class PostControllerDocTest {
                 .content("Content")
                 .build();
 
-        postRepository.save(post);
+        Post save = postRepository.save(post);
 
-        mockMvc.perform(get("/posts/{postId}", 1L)
+        mockMvc.perform(get("/posts/{postId}", save.getId())
                         .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -72,6 +70,7 @@ public class PostControllerDocTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(postRequest);
 
+        //expected
         mockMvc.perform(post("/posts")
                         .contentType(APPLICATION_JSON)
                         .content(json)
@@ -82,6 +81,40 @@ public class PostControllerDocTest {
                         requestFields(
                             fieldWithPath("title").description("제목"),
                             fieldWithPath("content").description("내용")
+                        )
+                ));
+    }
+
+    @Test
+    @Rollback
+    public void 게시글_수정() throws Exception {
+        //given
+
+        Post post = Post.builder()
+                .title("Title")
+                .content("Content")
+                .build();
+
+        Post save = postRepository.save(post);
+
+        PostRequest postRequest = PostRequest.builder()
+                .title("제목!")
+                .content("글내용")
+                .build();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(postRequest);
+
+        //expected
+        mockMvc.perform(patch("/posts/{postId}", save.getId())
+                        .contentType(APPLICATION_JSON)
+                        .content(json)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("post-edit",
+                        requestFields(
+                                fieldWithPath("title").description("제목!"),
+                                fieldWithPath("content").description("글내용")
                         )
                 ));
     }
