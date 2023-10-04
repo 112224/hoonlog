@@ -3,9 +3,6 @@ import {ref} from "vue";
 import axios from "axios";
 import router from "@/router";
 
-
-const count = ref(0);
-
 const title = ref("");
 const content = ref("");
 
