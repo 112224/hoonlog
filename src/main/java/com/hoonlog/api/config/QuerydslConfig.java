@@ -1,4 +1,4 @@
-package com.hoonlog.config;
+package com.hoonlog.api.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
