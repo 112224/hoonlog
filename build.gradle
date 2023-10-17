@@ -58,6 +58,9 @@ asciidoctor {
     baseDirFollowsSourceFile()
     dependsOn test
 }
+jar {
+    enabled=false
+}
 
 bootJar {
     dependsOn asciidoctor
